@@ -1,0 +1,100 @@
+{
+  "_index": "wazuh-alerts-4.x-2025.10.07",
+  "_id": "j-kEvZkBeeVB_yay9CIs",
+  "_version": 1,
+  "_score": null,
+  "_source": {
+    "input": {
+      "type": "log"
+    },
+    "agent": {
+      "ip": "10.0.2.8",
+      "name": "wazuhagent",
+      "id": "002"
+    },
+    "manager": {
+      "name": "wazuhserver"
+    },
+    "data": {
+      "ip_v": "4",
+      "in_iface": "enp0s3",
+      "src_ip": "10.0.2.9",
+      "src_port": "50552",
+      "event_type": "alert",
+      "alert": {
+        "severity": "2",
+        "signature_id": "2002910",
+        "rev": "6",
+        "metadata": {
+          "updated_at": [
+            "2019_07_26"
+          ],
+          "confidence": [
+            "Medium"
+          ],
+          "created_at": [
+            "2010_07_30"
+          ],
+          "signature_severity": [
+            "Informational"
+          ]
+        },
+        "gid": "1",
+        "signature": "ET SCAN Potential VNC Scan 5800-5820",
+        "action": "allowed",
+        "category": "Attempted Information Leak"
+      },
+      "flow_id": "1414418381590469.000000",
+      "dest_ip": "10.0.2.8",
+      "proto": "TCP",
+      "dest_port": "5800",
+      "pkt_src": "wire/pcap",
+      "flow": {
+        "src_ip": "10.0.2.9",
+        "src_port": "50552",
+        "pkts_toserver": "1",
+        "dest_ip": "10.0.2.8",
+        "start": "2025-10-07T04:51:33.067175+0000",
+        "bytes_toclient": "0",
+        "bytes_toserver": "60",
+        "pkts_toclient": "0",
+        "dest_port": "5800"
+      },
+      "timestamp": "2025-10-07T04:51:33.067175+0000",
+      "direction": "to_server"
+    },
+    "rule": {
+      "firedtimes": 14,
+      "mail": false,
+      "level": 3,
+      "description": "Suricata: Alert - ET SCAN Potential VNC Scan 5800-5820",
+      "groups": [
+        "ids",
+        "suricata"
+      ],
+      "id": "86601"
+    },
+    "location": "/var/log/suricata/eve.json",
+    "decoder": {
+      "name": "json"
+    },
+    "id": "1759812840.99786",
+    "timestamp": "2025-10-07T04:54:00.408+0000"
+  },
+  "fields": {
+    "timestamp": [
+      "2025-10-07T04:54:00.408Z"
+    ],
+    "data.timestamp": [
+      "2025-10-07T04:51:33.067Z"
+    ]
+  },
+  "highlight": {
+    "agent.id": [
+      "@opensearch-dashboards-highlighted-field@002@/opensearch-dashboards-highlighted-field@"
+    ]
+  },
+  "sort": [
+    1759812840408
+  ]
+}
