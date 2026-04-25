@@ -1,5 +1,5 @@
 ---
-title: 'Homelab1: SIEM + IDS'
+title: 'Technical Documentation - Homelab1: SIEM + IDS'
 
 ---
 
@@ -17,7 +17,8 @@ The primary goals of this home-lab are to:
 - Develop hands-on troubleshooting skills by identifying and resolving technical issues during the system's setup and deployment.
 
 ## Lab architecture
-![{AEECF608-BD9E-4A25-9CBD-8BA27B0A60D0}](https://hackmd.io/_uploads/H1J8e3F6-l.png)
+<img width="879" height="277" alt="image" src="https://github.com/user-attachments/assets/79f803ca-d3b4-4cee-937e-c76459b5133a" />
+
 
 
 
@@ -40,9 +41,9 @@ The primary goals of this home-lab are to:
 #### Step 1: Install Wazuh Server (all)
 In the device's terminal (Linux), run:
 ```
-curl -sO https://packages.wazuh.com/4.12/wazuh-install.sh && sudo bash ./wazuh-install.sh -a
+$ curl -sO https://packages.wazuh.com/4.12/wazuh-install.sh && sudo bash ./wazuh-install.sh -a
 ```
-Once finised, open Wazuh Dashboard by access: 
+Once finished, access the Wazuh Dashboard via: 
 ```
 https://<WAZUH_SERVER_IP>
 ```
@@ -53,41 +54,64 @@ On Dashboard, select Wazuh agent -> Deploy new agent and follow the instructions
 #### Step 3: Install Suricata
 In the device's terminal (Linux), run:
 ```
-sudo add-apt-repository ppa:oisf/suricata-stable
-sudo apt-get update
-sudo apt-get install suricata -y
+$ sudo add-apt-repository ppa:oisf/suricata-stable
+$ sudo apt-get update
+$ sudo apt-get install suricata -y
 ```
-In this home-lab, I used ET ruleset. Download it from:
+This home-lab uses ET ruleset for Suricata. Download it from:
 https://rules.emergingthreats.net/open/suricata-6.0.8/
-Then open suricata.yaml and configure:
+Then open *suricata.yaml* and configure:
 - Rule files
 - Log files (IDS log and Suricata self-log)
 *(more detail in docs/)*
 
 #### Step 4: Integrate with Wazuh:
-Modify *ossec.conf* to make Wazuh Agent read eve.json, since it is in json format
+Modify *ossec.conf* to make Wazuh Agent read *eve.json*, since it is in json format
 *(more detail in docs/)*
 
 ## Test
 ### Port scanning
-On Attacker, start scanning Victim using nmap tool:
+On Attacker, start scanning Victim device using nmap tool:
 ```
-nmap -sS -sV Pn 10.0.2.8
+$ nmap -sS -sV -Pn 10.0.2.8
 ```
-(image 1: Running nmap)
+<img width="931" height="242" alt="image 1 nmap" src="https://github.com/user-attachments/assets/02fdb464-8867-4e9d-afb7-1f7f2006e240" />
 
-On Victim, view eve.json to see Suricata detection result:
-(image 2: Viewing eve.json)
+
+On Victim device, view *eve.json* to see Suricata detection result:
+<img width="630" height="604" alt="image 2 eve_json" src="https://github.com/user-attachments/assets/3d934c76-a2ac-4ecf-b635-5675d9c71120" />
+
 
 On Wazuh Dashboard, view that alert:
-(image 3: Alert on Wazuh Dashboard)
+<img width="906" height="526" alt="image 3 Alerts on Wazuh Dashboard" src="https://github.com/user-attachments/assets/e6ce3cde-6b59-4e2f-9d83-2570d24b9f84" />
+
 
 
 ## Troubleshoot:
-- Once installed Wazuh agent, if Wazuh Server does not recognize new agent, open ossec.conf in agent device, modify **MANAGER_IP**, then restart Wazuh Agent
-(image 4: Modifying MANAGER_IP )
+### Set Wazuh Manager IP
+- Problem: Once installed Wazuh agent, Wazuh Manager did not recognize new agent from agent. Agent device failed to register with Manager.
+- Investigation: On Agent device, *ossec.log* indicated a connection failure. In *ossec.conf*, it was noticed that **MANAGER_IP** was set to default.
+- Troubleshooting: *ossec.conf* was updated with correct **MANAGER_IP**, then restarted Wazuh Agent
+<img width="726" height="303" alt="image 4 Troubleshoot" src="https://github.com/user-attachments/assets/b0784335-2945-4f12-9f59-b18fe4112570" />
+
+- Verify: Agent's status changed to Active. 
+
+### Permission issues
+- Problem: In Victim device, Suricata detected the attack and wrote logs to *eve.json* as usual. However, Wazuh Dashboard did not get any alerts, though *ossec.conf* had been configured properly.
+- Investigation: On victim device, *ossec.log* revealed a permission issue. It **could not open eve.json due to lack of permission**
+```
+Wazuh-logcollector: ERROR: (1103): Could not open file '/var/log/suricata/eve.json' due to [(13)-Permission denied]
+```
+- Troubleshooting: Give wazuh user permission to view *eve.json* by adding it into suricata group:
+```
+$ sudo usermod -aG suricata wazuh
+$ sudo chmod 640 /var/log/suricata/eve.json
+```
+Then restart Suricata and Wazuh Agent
+- Verification: Alerts were sucessfully shown on Dashboard
 
 ## What is included:
 - /docs: config files
 - /images: images
 - /results: result files
+
