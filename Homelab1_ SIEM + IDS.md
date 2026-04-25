@@ -91,7 +91,3 @@ On Wazuh Dashboard, view that alert:
 - /docs: config files
 - /images: images
 - /results: result files
-
-## Note (delete before push)
-- docs: suricata.yaml, ossec.conf.
-- Problem: Không lấy được 2 file trên ra.
