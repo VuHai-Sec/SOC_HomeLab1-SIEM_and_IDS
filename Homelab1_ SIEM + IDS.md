@@ -111,7 +111,7 @@ Then restart Suricata and Wazuh Agent
 - Verification: Alerts were sucessfully shown on Dashboard
 
 ## What is included:
-- /docs: config files
+- /configs: config files
 - /images: images
 - /results: result files
 
