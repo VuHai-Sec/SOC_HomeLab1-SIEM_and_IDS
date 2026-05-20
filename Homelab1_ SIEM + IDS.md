@@ -2,6 +2,8 @@
 title: 'Technical Documentation - Homelab1: SIEM + IDS'
 
 ---
+## Updated: 
+My second SOC homelab: https://github.com/VuHai-Sec/SOC_HomeLab2-SIEM_IDS_Telegram_real-time_alert
 
 ## Overall
 
